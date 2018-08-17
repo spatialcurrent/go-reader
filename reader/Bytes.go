@@ -8,14 +8,11 @@
 package reader
 
 import (
-  "bytes"
-  "bufio"
+	"bufio"
+	"bytes"
 )
 
 // Bytes returns a reader for reading the bytes from an input array, and an error if any.
 func Bytes(b []byte) (ByteReadCloser, error) {
-  r := &Reader{
-    Reader: bufio.NewReader(bytes.NewReader(b)),
-  }
-	return r, nil
+	return NewCache(&Reader{Reader: bufio.NewReader(bytes.NewReader(b))}), nil
 }

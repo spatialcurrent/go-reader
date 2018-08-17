@@ -63,9 +63,9 @@ import (
 // Reader is a struct for normalizing reading of bytes from files with arbitrary compression and for closing underlying resources.
 // Reader implements the ByteReader interface by wrapping around a subordinate ByteReader.
 type Reader struct {
-	Reader     ByteReader // the instance of ByteReader used for reading bytes
-	Closer io.Closer // Used for closing readers with footer metadata, e.g., gzip.  Not always needed, e.g., snappy
-	File       *os.File // underlying file, if any
+	Reader ByteReader // the instance of ByteReader used for reading bytes
+	Closer io.Closer  // Used for closing readers with footer metadata, e.g., gzip.  Not always needed, e.g., snappy
+	File   *os.File   // underlying file, if any
 }
 
 // Read reads a maximum len(p) bytes from the reader and returns an error, if any.
@@ -96,6 +96,26 @@ func (r *Reader) ReadBytes(delim byte) ([]byte, error) {
 	}
 
 	return make([]byte, 0), nil
+}
+
+// ReadFirst is not implemented by Reader
+func (r *Reader) ReadFirst() (byte, error) {
+	return byte(0), errors.New("ReadFirst is not implemented by Reader")
+}
+
+// ReadAt is not implemented by Reader
+func (r *Reader) ReadAt(i int) (byte, error) {
+	return byte(0), errors.New("ReadAt is not implemented by Reader")
+}
+
+// ReadRange is not implemented by Reader
+func (r *Reader) ReadRange(start int, end int) ([]byte, error) {
+	return make([]byte, 0), errors.New("ReadRange is not implemented by Reader")
+}
+
+// ReadAll is not implemented by Reader
+func (r *Reader) ReadAll() ([]byte, error) {
+	return make([]byte, 0), errors.New("ReadAll is not implemented by Reader")
 }
 
 // Close closes the Closer and the underlying *os.File if not nil.

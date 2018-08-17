@@ -8,12 +8,12 @@
 package reader
 
 import (
-  "bufio"
-  "os"
+	"bufio"
+	"os"
 )
 
 import (
-  "github.com/golang/snappy"
+	"github.com/golang/snappy"
 	"github.com/pkg/errors"
 )
 
@@ -21,19 +21,18 @@ import (
 //
 //  - https://godoc.org/github.com/golang/snappy
 //
-func SnappyFile(path string) (ByteReadCloser, error) {
+func SnappyFile(path string, cache bool) (ByteReadCloser, error) {
 
-  f, err := os.OpenFile(path, os.O_RDONLY, 0600)
-  if err != nil {
-    return nil, errors.Wrap(err, "Error opening snappy file at \""+path+"\" for reading")
-  }
+	f, err := os.OpenFile(path, os.O_RDONLY, 0600)
+	if err != nil {
+		return nil, errors.Wrap(err, "Error opening snappy file at \""+path+"\" for reading")
+	}
 
-  sr := snappy.NewReader(bufio.NewReader(f))
+	sr := snappy.NewReader(bufio.NewReader(f))
 
-  r := &Reader{
-    Reader: bufio.NewReader(sr),
-    File: f,
-  }
+	if cache {
+		return NewCache(&Reader{Reader: bufio.NewReader(sr), File: f}), nil
+	}
 
-	return r, nil
+	return &Reader{Reader: bufio.NewReader(sr), File: f}, nil
 }

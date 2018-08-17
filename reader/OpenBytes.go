@@ -8,7 +8,7 @@
 package reader
 
 import (
-  "github.com/pkg/errors"
+	"github.com/pkg/errors"
 )
 
 // OpenBytes returns a ByteReader for a byte array with a given compression.
@@ -18,13 +18,13 @@ import (
 //  - https://godoc.org/github.com/golang/snappy
 //
 func OpenBytes(b []byte, alg string) (ByteReadCloser, error) {
-  switch alg {
-  case "snappy":
-    return SnappyBytes(b)
-  case "gzip":
-    return GzipBytes(b)
-  case "none":
-    return Bytes(b)
-  }
-  return nil, errors.New("Unknown algorithm \""+alg+"\"")
+	switch alg {
+	case "snappy":
+		return SnappyBytes(b)
+	case "gzip":
+		return GzipBytes(b)
+	case "none":
+		return Bytes(b)
+	}
+	return nil, errors.New("Unknown algorithm \"" + alg + "\"")
 }

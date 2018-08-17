@@ -8,13 +8,15 @@
 package reader
 
 import (
-  "io"
+	"io"
 )
 
-
-// ByteReader is an interface that extends io.Reader and io.ByteReader.
+// ByteReader is an interface that extends io.Reader, io.ByteReader, and adds a range function.
 // ByteReader provides functions for reading bytes.
 type ByteReadCloser interface {
-  ByteReader
-  io.Closer
+	ByteReader
+	io.Closer
+	ReadAt(i int) (byte, error)
+	ReadAll() ([]byte, error)
+	ReadRange(start int, end int) ([]byte, error)
 }

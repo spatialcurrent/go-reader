@@ -8,8 +8,8 @@
 package reader
 
 import (
-  "bufio"
-  "os"
+	"bufio"
+	"os"
 )
 
 import (
@@ -17,19 +17,18 @@ import (
 )
 
 // File returns a ByteReader for reading bytes without any transformation from a file, and an error if any.
-func File(path string) (ByteReadCloser, error) {
+func File(path string, cache bool) (ByteReadCloser, error) {
 
-  f, err := os.OpenFile(path, os.O_RDONLY, 0600)
-  if err != nil {
-    return nil, errors.Wrap(err, "Error opening file at \""+path+"\" for reading")
-  }
+	f, err := os.OpenFile(path, os.O_RDONLY, 0600)
+	if err != nil {
+		return nil, errors.Wrap(err, "Error opening file at \""+path+"\" for reading")
+	}
 
-  br := bufio.NewReader(f)
+	br := bufio.NewReader(f)
 
-  r := &Reader{
-    Reader: br,
-    File: f,
-  }
+	if cache {
+		return NewCache(&Reader{Reader: br, File: f}), nil
+	}
 
-	return r, nil
+	return &Reader{Reader: br, File: f}, nil
 }

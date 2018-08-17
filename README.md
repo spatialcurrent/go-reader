@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/spatialcurrent/go-reader.svg)](https://travis-ci.org/spatialcurrent/go-reader) [![GoDoc](https://godoc.org/github.com/spatialcurrent/go-reader?status.svg)](https://godoc.org/github.com/spatialcurrent/go-reader)
+[![Build Status](https://travis-ci.org/spatialcurrent/go-reader.svg)](https://travis-ci.org/spatialcurrent/go-reader) [![Go Report Card](https://goreportcard.com/badge/spatialcurrent/go-reader)](https://goreportcard.com/report/spatialcurrent/go-reader)  [![GoDoc](https://godoc.org/github.com/spatialcurrent/go-reader?status.svg)](https://godoc.org/github.com/spatialcurrent/go-reader) [![license](http://img.shields.io/badge/license-MIT-red.svg?style=flat)](https://github.com/spatialcurrent/go-reader/blob/master/LICENSE.md)
 
 # go-reader
 
@@ -8,17 +8,35 @@
 
 # Usage
 
-You can import **go-reader** as a library with:
+**CLI**
+
+You can use the command line tool to convert between formats.
 
 ```
+Usage: go-reader -i INPUT_FORMAT -o OUTPUT_FORMAT
+Options:
+  -help
+    	Print help.
+  -i string
+    	The input format: csv, hcl, hcl2, json, jsonl, properties, toml, yaml
+  -o string
+    	The output format: csv, hcl, hcl2, json, jsonl, properties, toml, yaml
+  -version
+    	Prints version to stdout.
+```
+
+**Go**
+
+You can import **go-reader** as a library with:
+
+```go
 import (
   "github.com/spatialcurrent/go-reader/reader"
 )
+...
 ```
 
-You can also test **go-reader** using a command line tool:
-
-TBD
+See [reader](https://godoc.org/github.com/spatialcurrent/go-reader/reader) in GoDoc for information on how to use Go API.
 
 # Examples:
 

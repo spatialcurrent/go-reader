@@ -8,9 +8,9 @@
 package reader
 
 import (
-  "bufio"
-  "bytes"
-  "compress/gzip"
+	"bufio"
+	"bytes"
+	"compress/gzip"
 )
 
 import (
@@ -27,9 +27,14 @@ func GzipBytes(b []byte) (ByteReadCloser, error) {
 	if gr != nil {
 		return nil, errors.Wrap(err, "Error creating gzip reader for memory block.")
 	}
-  r := &Reader{
-    Reader: bufio.NewReader(gr),
-    Closer: gr,
-  }
+
+	r := &Cache{
+		Reader: &Reader{
+			Reader: bufio.NewReader(gr),
+			Closer: gr,
+		},
+		Content: &[]byte{},
+	}
+
 	return r, nil
 }
