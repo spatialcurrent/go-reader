@@ -53,6 +53,7 @@ package reader
 
 import (
 	"io"
+	"io/ioutil"
 	"os"
 )
 
@@ -115,7 +116,7 @@ func (r *Reader) ReadRange(start int, end int) ([]byte, error) {
 
 // ReadAll is not implemented by Reader
 func (r *Reader) ReadAll() ([]byte, error) {
-	return make([]byte, 0), errors.New("ReadAll is not implemented by Reader")
+	return ioutil.ReadAll(r.Reader)
 }
 
 // Close closes the Closer and the underlying *os.File if not nil.
