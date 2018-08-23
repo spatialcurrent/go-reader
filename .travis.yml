@@ -15,12 +15,15 @@ matrix:
     - go: tip
   fast_finish: true
 
+install:
+  - go get -t ./...
+  - go get -u github.com/alecthomas/gometalinter
+  - gometalinter --install
+
 script:
-  - cd reader
+  - gometalinter --misspell-locale=US --disable-all --enable=misspell --enable=vet ./reader/
+  - gometalinter --misspell-locale=US --disable-all --enable=misspell --enable=vet ./cmd/reader/
+  - cd cmd/reader
   - go fmt
-  - go test
-  #- cd ..
-  #- cd cmd/go-reader
-  #- go fmt
-  #- go test
   - go build
+  - go test

@@ -14,6 +14,7 @@ import (
 )
 
 import (
+	"github.com/golang/snappy"
 	"github.com/pkg/errors"
 )
 
@@ -29,7 +30,7 @@ import (
 //  - https://golang.org/pkg/compress/gzip/
 //  - https://godoc.org/github.com/golang/snappy
 //
-func OpenS3Object(bucket string, key string, alg string, cache bool, s3_client *s3.S3) (ByteReadCloser, error) {
+func OpenS3Object(bucket string, key string, alg string, cache bool, s3_client *s3.S3) (ByteReadCloser, *Metadata, error) {
 
 	input := &s3.GetObjectInput{
 		Bucket: aws.String(bucket),
@@ -38,24 +39,24 @@ func OpenS3Object(bucket string, key string, alg string, cache bool, s3_client *
 
 	result, err := s3_client.GetObject(input)
 	if err != nil {
-		return &Reader{}, errors.Wrap(err, "Error fetching data from S3")
+		return &Reader{}, nil, errors.Wrap(err, "Error fetching data from S3")
 	}
 
 	if alg == "gzip" {
 
 		gr, err := gzip.NewReader(result.Body)
 		if err != nil {
-			return &Reader{}, errors.Wrap(err, "Error creating gizp reader for AWS s3 object at s3://"+bucket+"/"+key+".")
+			return &Reader{}, nil, errors.Wrap(err, "Error creating gizp reader for AWS s3 object at s3://"+bucket+"/"+key+".")
 		}
 
 		if cache {
 			return &Cache{
 				Reader:  &Reader{Reader: bufio.NewReader(gr), Closer: gr},
 				Content: &[]byte{},
-			}, nil
+			}, NewMetadataFromS3(result), nil
 		}
 
-		return &Reader{Reader: bufio.NewReader(gr), Closer: gr}, nil
+		return &Reader{Reader: bufio.NewReader(gr), Closer: gr}, NewMetadataFromS3(result), nil
 
 	}
 
@@ -67,20 +68,34 @@ func OpenS3Object(bucket string, key string, alg string, cache bool, s3_client *
 			return &Cache{
 				Reader:  &Reader{Reader: bufio.NewReader(br), Closer: result.Body},
 				Content: &[]byte{},
-			}, nil
+			}, NewMetadataFromS3(result), nil
 		}
 
-		return &Reader{Reader: bufio.NewReader(br), Closer: result.Body}, nil
+		return &Reader{Reader: bufio.NewReader(br), Closer: result.Body}, NewMetadataFromS3(result), nil
 
+	}
+
+	if alg == "snappy" {
+
+		sr := snappy.NewReader(bufio.NewReader(result.Body))
+
+		if cache {
+			return &Cache{
+				Reader:  &Reader{Reader: bufio.NewReader(sr), Closer: result.Body},
+				Content: &[]byte{},
+			}, NewMetadataFromS3(result), nil
+		}
+
+		return &Reader{Reader: bufio.NewReader(sr), Closer: result.Body}, NewMetadataFromS3(result), nil
 	}
 
 	if cache {
 		return &Cache{
 			Reader:  &Reader{Reader: bufio.NewReader(result.Body), Closer: result.Body},
 			Content: &[]byte{},
-		}, nil
+		}, NewMetadataFromS3(result), nil
 	}
 
-	return &Reader{Reader: bufio.NewReader(result.Body), Closer: result.Body}, nil
+	return &Reader{Reader: bufio.NewReader(result.Body), Closer: result.Body}, NewMetadataFromS3(result), nil
 
 }
