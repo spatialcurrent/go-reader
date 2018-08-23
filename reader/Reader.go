@@ -89,7 +89,7 @@ func (r *Reader) ReadByte() (byte, error) {
 	return 0, nil
 }
 
-// Read returns all bytes up to an including the first occurence of the delimiter "delim" and an error, if any.
+// Read returns all bytes up to an including the first occurrence of the delimiter "delim" and an error, if any.
 func (r *Reader) ReadBytes(delim byte) ([]byte, error) {
 
 	if r.Reader != nil {

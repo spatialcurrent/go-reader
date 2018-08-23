@@ -18,13 +18,13 @@ import (
 func main() {
 	js.Global.Set("reader", map[string]interface{}{
 		"version": reader.VERSION,
-		"fetch":    FetchResource,
+		"fetch":   FetchResource,
 	})
 }
 
 func FetchResource(uri string, alg string, callback func(...interface{}) *js.Object) {
 
-  go func() {
+	go func() {
 		r, _, err := reader.OpenResource(uri, alg, 4096, false, nil, nil)
 		if err != nil {
 			callback("", errors.Wrap(err, "error opening resource from uri "+uri).Error())

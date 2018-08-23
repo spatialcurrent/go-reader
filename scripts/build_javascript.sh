@@ -14,11 +14,16 @@ cd $DIR/../cmd/reader.js
 go fmt
 echo "Done formatting."
 echo "******************"
-echo "Building Javascript artifact for go-reader"
+echo "Building Javascript artifacts for go-reader"
 cd $DEST
-gopherjs build -o dfl.js github.com/spatialcurrent/go-reader/cmd/reader.js
+gopherjs build -o reader.js github.com/spatialcurrent/go-reader/cmd/reader.js
 if [[ "$?" != 0 ]] ; then
-    echo "Error building Javascript for go-reader"
+    echo "Error building Javascript artificats for go-reader"
     exit 1
 fi
-echo "Executable built at $DEST"
+gopherjs build -m -o reader.min.js github.com/spatialcurrent/go-reader/cmd/reader.js
+if [[ "$?" != 0 ]] ; then
+    echo "Error building Javascript artificats for go-reader"
+    exit 1
+fi
+echo "JavaScript artificats built at $DEST"
