@@ -25,7 +25,7 @@ func main() {
 func FetchResource(uri string, alg string, callback func(...interface{}) *js.Object) {
 
 	go func() {
-		r, _, err := reader.OpenResource(uri, alg, 4096, false, nil, nil)
+		r, _, err := reader.OpenResource(uri, alg, 4096, false, nil)
 		if err != nil {
 			callback("", errors.Wrap(err, "error opening resource from uri "+uri).Error())
 			return

@@ -24,7 +24,7 @@ import (
 //
 func GzipBytes(b []byte) (ByteReadCloser, error) {
 	gr, err := gzip.NewReader(bytes.NewReader(b))
-	if gr != nil {
+	if err != nil {
 		return nil, errors.Wrap(err, "Error creating gzip reader for memory block.")
 	}
 

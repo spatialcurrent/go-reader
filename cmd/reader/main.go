@@ -17,7 +17,6 @@ import (
 )
 
 import (
-	"github.com/colinmarc/hdfs"
 	"github.com/pkg/errors"
 )
 
@@ -51,7 +50,6 @@ func main() {
 	var aws_access_key_id string
 	var aws_secret_access_key string
 	var aws_session_token string
-	var hdfs_name_node string
 
 	var input_uri string
 	var input_compression string
@@ -65,8 +63,6 @@ func main() {
 	flag.StringVar(&aws_access_key_id, "aws_access_key_id", "", "Defaults to value of environment variable AWS_ACCESS_KEY_ID")
 	flag.StringVar(&aws_secret_access_key, "aws_secret_access_key", "", "Defaults to value of environment variable AWS_SECRET_ACCESS_KEY.")
 	flag.StringVar(&aws_session_token, "aws_session_token", "", "Defaults to value of environment variable AWS_SESSION_TOKEN.")
-
-	flag.StringVar(&hdfs_name_node, "hdfs_name_node", "", "Defaults to value of environment variable HDFS_DEFAULT_NAME_NODE.")
 
 	flag.StringVar(&input_uri, "uri", "", "\"stdin\" or uri to input file")
 	flag.StringVar(&input_compression, "alg", "none", "Stream input compression algorithm for nodes, using: bzip2, gzip, snappy, or none.")
@@ -88,10 +84,6 @@ func main() {
 	}
 	if len(aws_session_token) == 0 {
 		aws_session_token = os.Getenv("AWS_SESSION_TOKEN")
-	}
-
-	if len(hdfs_name_node) == 0 {
-		hdfs_name_node = os.Getenv("HDFS_DEFAULT_NAME_NODE")
 	}
 
 	if help {
@@ -117,20 +109,13 @@ func main() {
 
 	var aws_session *session.Session
 	var s3_client *s3.S3
-	var hdfs_client *hdfs.Client
 
 	if strings.HasPrefix(input_uri, "s3://") {
 		aws_session = connect_to_aws(aws_access_key_id, aws_secret_access_key, aws_session_token, aws_default_region)
 		s3_client = s3.New(aws_session)
-	} else if strings.HasPrefix(input_uri, "hdfs://") {
-		c, err := hdfs.New(hdfs_name_node)
-		if err != nil {
-			log.Fatal(errors.Wrap(err, "error connecting to name node at uri "+hdfs_name_node))
-		}
-		hdfs_client = c
 	}
 
-	input_reader, _, err := reader.OpenResource(input_uri, input_compression, input_reader_buffer_size, false, s3_client, hdfs_client)
+	input_reader, _, err := reader.OpenResource(input_uri, input_compression, input_reader_buffer_size, false, s3_client)
 	if err != nil {
 		log.Fatal(errors.Wrap(err, "error opening resource from uri "+input_uri))
 	}

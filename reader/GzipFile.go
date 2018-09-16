@@ -30,7 +30,7 @@ func GzipFile(path string, cache bool, buffer_size int) (ByteReadCloser, error) 
 	}
 
 	gr, err := gzip.NewReader(bufio.NewReaderSize(f, buffer_size))
-	if gr != nil {
+	if err != nil {
 		return nil, errors.Wrap(err, "Error creating gzip reader for file \""+path+"\"")
 	}
 

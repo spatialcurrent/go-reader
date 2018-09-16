@@ -25,7 +25,7 @@ func OpenFile(uri string, alg string, cache bool, buffer_size int) (ByteReadClos
 		return GzipFile(uri, cache, buffer_size)
 	case "bzip2":
 		return Bzip2File(uri, cache, buffer_size)
-	case "none":
+	case "none", "":
 		return File(uri, cache, buffer_size)
 	}
 	return nil, errors.New("Unknown algorithm \"" + alg + "\"")

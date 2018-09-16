@@ -21,7 +21,7 @@ func main() {}
 //export ReadAll
 func ReadAll(uri *C.char, alg *C.char, result **C.char) *C.char {
 
-	r, _, err := reader.OpenResource(C.GoString(uri), C.GoString(alg), 4096, false, nil, nil)
+	r, _, err := reader.OpenResource(C.GoString(uri), C.GoString(alg), 4096, false, nil)
 	if err != nil {
 		return C.CString(errors.Wrap(err, "error opening resource from uri "+C.GoString(uri)).Error())
 	}
