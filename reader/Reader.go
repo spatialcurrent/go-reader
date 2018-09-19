@@ -101,17 +101,17 @@ func (r *Reader) ReadBytes(delim byte) ([]byte, error) {
 
 // ReadFirst is not implemented by Reader
 func (r *Reader) ReadFirst() (byte, error) {
-	return byte(0), errors.New("ReadFirst is not implemented by Reader")
+	return byte(0), &ErrorNotImplemented{Function: "ReadFirst", Object: "Reader"}
 }
 
 // ReadAt is not implemented by Reader
 func (r *Reader) ReadAt(i int) (byte, error) {
-	return byte(0), errors.New("ReadAt is not implemented by Reader")
+	return byte(0), &ErrorNotImplemented{Function: "ReadAt", Object: "Reader"}
 }
 
 // ReadRange is not implemented by Reader
 func (r *Reader) ReadRange(start int, end int) ([]byte, error) {
-	return make([]byte, 0), errors.New("ReadRange is not implemented by Reader")
+	return make([]byte, 0), &ErrorNotImplemented{Function: "ReadRange", Object: "Reader"}
 }
 
 // ReadAll is not implemented by Reader

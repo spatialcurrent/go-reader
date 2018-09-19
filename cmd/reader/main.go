@@ -65,7 +65,7 @@ func main() {
 	flag.StringVar(&aws_session_token, "aws_session_token", "", "Defaults to value of environment variable AWS_SESSION_TOKEN.")
 
 	flag.StringVar(&input_uri, "uri", "", "\"stdin\" or uri to input file")
-	flag.StringVar(&input_compression, "alg", "none", "Stream input compression algorithm for nodes, using: bzip2, gzip, snappy, or none.")
+	flag.StringVar(&input_compression, "alg", "", "Stream input compression algorithm for nodes, using: bzip2, gzip, snappy, zip, or none.")
 	flag.IntVar(&input_reader_buffer_size, "buffer_size", 4096, "The input reader buffer size") // default from https://golang.org/src/bufio/bufio.go
 
 	flag.BoolVar(&version, "version", false, "Prints version to stdout")
